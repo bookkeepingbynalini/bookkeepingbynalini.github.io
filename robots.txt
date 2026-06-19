@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://www.bookkeepingbynalini.com/sitemap.xml
