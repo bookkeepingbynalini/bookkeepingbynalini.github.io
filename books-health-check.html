@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Books Health Check — Bookkeeping by Nalini</title>
+<meta name="description" content="A free 2-minute check on the health of your business books. Nine questions, instant score, no jargon.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#1B3A8C; --navy-deep:#122A6B; --gold:#F5A800; --gold-soft:#FFF4D6;
+    --ink:#1A2238; --mut:#5A6478; --line:#E3E7F0; --bg:#F7F8FC; --white:#FFFFFF;
+    --green:#1E8E5A; --amber:#C97A00; --red:#C0392B;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:'Instrument Sans',system-ui,sans-serif;color:var(--ink);background:var(--bg);line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:640px;margin:0 auto;padding:0 20px}
+  h1,h2,h3{font-family:'Bricolage Grotesque',sans-serif;line-height:1.12}
+
+  /* header */
+  header{background:var(--navy);color:#fff;padding:14px 0}
+  header .wrap{display:flex;align-items:center;justify-content:space-between}
+  .brand{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:17px;letter-spacing:.2px}
+  .brand em{color:var(--gold);font-style:normal}
+  .hdr-tag{font-size:12px;opacity:.85}
+
+  /* panels */
+  .panel{display:none;padding:44px 0 72px}
+  .panel.on{display:block;animation:rise .45s cubic-bezier(.2,.7,.2,1)}
+  @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+  /* intro */
+  .eyebrow{display:inline-block;background:var(--gold-soft);color:var(--amber);font-weight:600;font-size:12px;letter-spacing:.12em;text-transform:uppercase;padding:6px 12px;border-radius:999px;margin-bottom:18px}
+  .intro h1{font-size:clamp(32px,6vw,44px);font-weight:800;color:var(--navy)}
+  .intro h1 .u{background:linear-gradient(transparent 68%,var(--gold) 68%,var(--gold) 92%,transparent 92%)}
+  .intro p{margin:16px 0 8px;color:var(--mut);font-size:17px;max-width:52ch}
+  .meta{display:flex;gap:18px;margin:22px 0 30px;font-size:13.5px;color:var(--mut);flex-wrap:wrap}
+  .meta span{display:flex;align-items:center;gap:7px}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--gold);flex:none}
+
+  .btn{display:inline-flex;align-items:center;gap:10px;background:var(--gold);color:var(--navy-deep);font-family:'Instrument Sans',sans-serif;font-weight:600;font-size:16.5px;border:none;border-radius:10px;padding:15px 28px;cursor:pointer;text-decoration:none;transition:transform .15s,box-shadow .15s;box-shadow:0 3px 0 rgba(27,58,140,.22)}
+  .btn:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(27,58,140,.22)}
+  .btn:focus-visible{outline:3px solid var(--navy);outline-offset:2px}
+  .btn.ghost{background:transparent;color:var(--mut);box-shadow:none;font-weight:500;padding:12px 14px}
+  .btn[disabled]{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none}
+
+  /* progress */
+  .prog{margin:34px 0 22px}
+  .prog-top{display:flex;justify-content:space-between;font-size:12.5px;color:var(--mut);font-weight:500;margin-bottom:8px}
+  .prog-top b{color:var(--navy);font-weight:600}
+  .bar{height:6px;background:var(--line);border-radius:999px;overflow:hidden}
+  .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--navy),var(--gold));border-radius:999px;transition:width .4s cubic-bezier(.2,.7,.2,1)}
+
+  /* question */
+  .qcard{background:var(--white);border:1px solid var(--line);border-radius:16px;padding:30px 28px;box-shadow:0 8px 28px rgba(27,58,140,.06)}
+  .qnum{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:13px;color:var(--gold);letter-spacing:.08em;margin-bottom:8px}
+  .qtext{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:clamp(20px,3.6vw,24px);color:var(--navy);margin-bottom:20px}
+  .opts{display:grid;gap:10px}
+  .opt{display:flex;align-items:center;gap:12px;background:var(--bg);border:1.5px solid var(--line);border-radius:11px;padding:14px 16px;font-size:15.5px;cursor:pointer;text-align:left;font-family:inherit;color:var(--ink);transition:border-color .12s,background .12s,transform .12s;width:100%}
+  .opt:hover{border-color:var(--navy);transform:translateX(3px)}
+  .opt:focus-visible{outline:3px solid var(--gold);outline-offset:1px}
+  .opt.sel{border-color:var(--navy);background:#EEF2FC}
+  .opt .ring{width:18px;height:18px;border:2px solid #B9C2D8;border-radius:50%;flex:none;position:relative;transition:border-color .12s}
+  .opt.sel .ring{border-color:var(--navy)}
+  .opt.sel .ring::after{content:"";position:absolute;inset:3px;border-radius:50%;background:var(--navy)}
+  .qnav{display:flex;justify-content:space-between;align-items:center;margin-top:22px}
+
+  /* gate */
+  .gate .qcard{text-align:left}
+  .gate h2{font-size:clamp(24px,4.4vw,30px);color:var(--navy);font-weight:800;margin-bottom:8px}
+  .gate p{color:var(--mut);font-size:15.5px;margin-bottom:20px}
+  .field{margin-bottom:14px}
+  .field label{display:block;font-size:13px;font-weight:600;color:var(--navy);margin-bottom:6px;letter-spacing:.02em}
+  .field input{width:100%;border:1.5px solid var(--line);border-radius:10px;padding:13px 14px;font-size:16px;font-family:inherit;background:var(--white);color:var(--ink)}
+  .field input:focus{outline:none;border-color:var(--navy);box-shadow:0 0 0 3px rgba(27,58,140,.12)}
+  .fineprint{font-size:12.5px;color:var(--mut);margin-top:12px}
+  .err{color:var(--red);font-size:13px;margin-top:8px;display:none}
+
+  /* result */
+  .result{text-align:center}
+  .gauge-wrap{width:220px;margin:6px auto 4px;position:relative}
+  .gauge-wrap svg{width:100%;height:auto;display:block}
+  .gauge-num{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding-top:10px}
+  .gauge-num b{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:52px;color:var(--navy);line-height:1}
+  .gauge-num span{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--mut);font-weight:600;margin-top:2px}
+  .band{display:inline-block;font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:15px;padding:7px 18px;border-radius:999px;margin:10px 0 14px}
+  .band.g{background:#E4F5EC;color:var(--green)}
+  .band.y{background:var(--gold-soft);color:var(--amber)}
+  .band.r{background:#FBE9E7;color:var(--red)}
+  .verdict{max-width:50ch;margin:0 auto 26px;color:var(--ink);font-size:16.5px}
+  .findings{max-width:520px;margin:0 auto 30px;text-align:left;display:grid;gap:10px}
+  .finding{display:flex;gap:11px;align-items:flex-start;background:var(--white);border:1px solid var(--line);border-left:3px solid var(--gold);border-radius:10px;padding:13px 15px;font-size:14.5px}
+  .pip{width:8px;height:8px;border-radius:50%;background:var(--gold);flex:none;margin-top:6px}
+  .cta-block{background:var(--navy);border-radius:18px;padding:34px 28px;color:#fff;max-width:560px;margin:0 auto}
+  .cta-block h3{font-size:clamp(21px,3.8vw,26px);font-weight:800;margin-bottom:8px}
+  .cta-block p{font-size:15px;opacity:.9;margin-bottom:20px;max-width:44ch;margin-left:auto;margin-right:auto}
+  .echo{font-size:12.5px;color:var(--mut);margin-top:18px}
+  .echo b{color:var(--navy)}
+
+  footer{border-top:1px solid var(--line);padding:26px 0 34px;color:var(--mut);font-size:12.5px;text-align:center}
+  footer b{color:var(--navy)}
+
+  @media(prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="brand">Bookkeeping by <em>Nalini</em></div>
+    <div class="hdr-tag">Certified QuickBooks ProAdvisor</div>
+  </div>
+</header>
+
+<!-- INTRO -->
+<section class="panel intro on" id="p-intro">
+  <div class="wrap">
+    <span class="eyebrow">Free 2-minute check</span>
+    <h1>How healthy are <span class="u">your books</span>, really?</h1>
+    <p>Nine quick questions. No jargon, no judgment — just an honest score and the specific things worth fixing before they get expensive.</p>
+    <div class="meta">
+      <span><i class="dot"></i>Takes about 2 minutes</span>
+      <span><i class="dot"></i>Instant score</span>
+      <span><i class="dot"></i>Built by a working bookkeeper</span>
+    </div>
+    <button class="btn" onclick="startQuiz()">Start the check &rarr;</button>
+  </div>
+</section>
+
+<!-- QUIZ -->
+<section class="panel" id="p-quiz">
+  <div class="wrap">
+    <div class="prog">
+      <div class="prog-top"><span>Books Health Check</span><b id="progLabel">Question 1 of 9</b></div>
+      <div class="bar"><i id="progFill"></i></div>
+    </div>
+    <div class="qcard">
+      <div class="qnum" id="qnum">QUESTION 1</div>
+      <div class="qtext" id="qtext"></div>
+      <div class="opts" id="opts"></div>
+      <div class="qnav">
+        <button class="btn ghost" id="backBtn" onclick="prevQ()">&larr; Back</button>
+        <button class="btn" id="nextBtn" onclick="nextQ()" disabled>Next &rarr;</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EMAIL GATE -->
+<section class="panel gate" id="p-gate">
+  <div class="wrap">
+    <div class="qcard">
+      <h2>Your score is ready.</h2>
+      <p>Tell me where to send your results and I'll show your score right now — plus what it means for your business.</p>
+      <div class="field">
+        <label for="fname">First name</label>
+        <input id="fname" type="text" autocomplete="given-name" placeholder="e.g., Chris">
+      </div>
+      <div class="field">
+        <label for="femail">Email</label>
+        <input id="femail" type="email" autocomplete="email" placeholder="you@yourbusiness.com">
+      </div>
+      <div class="err" id="gateErr">Please enter your name and a valid email so I know where to send your results.</div>
+      <button class="btn" style="margin-top:8px;width:100%;justify-content:center" onclick="submitGate()">Show my score &rarr;</button>
+      <p class="fineprint">Your results come from Nalini — a real bookkeeper, not a mailing robot. No spam, ever.</p>
+    </div>
+  </div>
+</section>
+
+<!-- RESULT -->
+<section class="panel result" id="p-result">
+  <div class="wrap">
+    <div class="gauge-wrap">
+      <svg viewBox="0 0 200 120" aria-hidden="true">
+        <path d="M14 110 A 86 86 0 0 1 186 110" fill="none" stroke="#E3E7F0" stroke-width="14" stroke-linecap="round"/>
+        <path id="arc" d="M14 110 A 86 86 0 0 1 186 110" fill="none" stroke="url(#gg)" stroke-width="14" stroke-linecap="round"
+              stroke-dasharray="540" stroke-dashoffset="540"/>
+        <defs>
+          <linearGradient id="gg" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#1B3A8C"/><stop offset="100%" stop-color="#F5A800"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <div class="gauge-num"><b id="score">0</b><span>out of 100</span></div>
+    </div>
+    <div class="band" id="band"></div>
+    <p class="verdict" id="verdict"></p>
+    <div class="findings" id="findings"></div>
+    <div class="cta-block">
+      <h3 id="ctaHead"></h3>
+      <p id="ctaSub"></p>
+      <a class="btn" id="ctaBtn" href="#" target="_blank" rel="noopener">Book my free consultation &rarr;</a>
+    </div>
+    <p class="echo">A copy of your results is on its way to <b id="echoEmail"></b>.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <b>Bookkeeping by Nalini LLC</b> &middot; Sparks, NV &middot; www.bookkeepingbynalini.com<br>
+    QuickBooks cleanups &amp; monthly bookkeeping for contractors and small businesses.
+  </div>
+</footer>
+
+<script>
+/* ============================================================
+   CONFIG — the only block you ever need to touch.
+   formspreeUrl: paste your Formspree endpoint, e.g.
+                 https://formspree.io/f/xabcdefg
+   calendlyUrl:  live free-consult link (already set).
+   ============================================================ */
+const CONFIG = {
+  formspreeUrl: "https://formspree.io/f/xlgyablq",
+  calendlyUrl: "https://calendly.com/bookkeepingbynalini/consultation"
+};
+
+/* 7 scored questions (options ordered best -> worst, pts 3..0)
+   + 2 unscored segmentation questions (business type, volume). */
+const QUESTIONS = [
+  {id:"recon", scored:true, text:"When were your bank accounts last reconciled?",
+    opts:["Within the last month","A few months ago","Over a year ago","I'm not sure what reconciling means"]},
+  {id:"behind", scored:true, text:"How far behind are your books right now?",
+    opts:["Fully current","1–3 months behind","4–12 months behind","More than a year behind"]},
+  {id:"uncat", scored:true, text:"How many transactions are sitting uncategorized (or parked in \u201cAsk My Accountant\u201d)?",
+    opts:["None — everything's categorized","A handful","Dozens or more","Honestly, no idea"]},
+  {id:"match", scored:true, text:"Do the balances in your books match your actual bank statements?",
+    opts:["Yes — they always tie out","Usually close","Often off, and I'm not sure why","I've never checked"]},
+  {id:"tax", scored:true, text:"What does tax time feel like for you?",
+    opts:["Smooth — my books are ready","A scramble, but it gets done","Dread — my preparer chases me for everything","I file late or on extension almost every year"]},
+  {id:"mix", scored:true, text:"How separate are your business and personal expenses?",
+    opts:["Fully separate accounts, always","Mostly separate, occasional crossover","They mix pretty often","Same account for everything"]},
+  {id:"pl", scored:true, text:"Could you pull an accurate profit &amp; loss for last month right now?",
+    opts:["Yes, in two clicks","Probably, with some tidying","I doubt the numbers would be right","No"]},
+  {id:"segment", scored:false, text:"What kind of business do you run?",
+    opts:["Construction / trades","Service business","Retail or e-commerce","Something else"]},
+  {id:"volume", scored:false, text:"Roughly how many transactions run through your business each month?",
+    opts:["Under 50","50–150","150–300","300+"]}
+];
+
+/* Findings: shown when the answer index is at or past weakAt. */
+const FINDINGS = {
+  recon:{weakAt:2, text:"Unreconciled accounts are the #1 reason books can't be trusted — errors hide there for months."},
+  behind:{weakAt:1, text:"Every month behind makes the catch-up slower and costlier. Backlogs compound like interest."},
+  uncat:{weakAt:2, text:"Uncategorized transactions distort your profit picture and your tax deductions."},
+  match:{weakAt:2, text:"When books don't tie to the bank, every report built on them is a guess."},
+  tax:{weakAt:2, text:"Tax-time chaos is a books problem, not a tax problem — clean books make filing boring (the good kind)."},
+  mix:{weakAt:2, text:"Mixed personal/business spending muddies deductions and creates audit risk."},
+  pl:{weakAt:2, text:"If you can't see last month's profit, you're steering the business by feel, not numbers."}
+};
+
+const SEGMENT_NOTE = {
+  "Construction / trades":"Contractor books have extra failure points — job costing, loans, and 1099s. This is my specialty.",
+  "Retail or e-commerce":"High transaction volume means small errors multiply fast — monthly reconciliation matters even more.",
+  "Service business":"Service businesses often under-track expenses — the deductions you miss are pure lost profit.",
+  "Something else":"Every industry has its own bookkeeping traps — a quick review finds yours."
+};
+
+/* ---------- state & flow ---------- */
+let step=0; const answers={};
+const $=id=>document.getElementById(id);
+function show(id){document.querySelectorAll(".panel").forEach(p=>p.classList.remove("on"));$(id).classList.add("on");window.scrollTo({top:0,behavior:"smooth"});}
+function startQuiz(){step=0;renderQ();show("p-quiz");}
+
+function renderQ(){
+  const Q=QUESTIONS[step];
+  $("qnum").textContent="QUESTION "+(step+1);
+  $("qtext").innerHTML=Q.text;
+  $("progLabel").textContent=`Question ${step+1} of ${QUESTIONS.length}`;
+  $("progFill").style.width=((step)/QUESTIONS.length*100)+"%";
+  const box=$("opts");box.innerHTML="";
+  Q.opts.forEach((t,i)=>{
+    const b=document.createElement("button");
+    b.type="button";b.className="opt";
+    b.innerHTML=`<span class="ring"></span><span>${t}</span>`;
+    if(answers[Q.id]&&answers[Q.id].idx===i)b.classList.add("sel");
+    b.onclick=()=>{answers[Q.id]={idx:i,text:t};
+      box.querySelectorAll(".opt").forEach(o=>o.classList.remove("sel"));
+      b.classList.add("sel");$("nextBtn").disabled=false;};
+    box.appendChild(b);
+  });
+  $("nextBtn").disabled=!answers[Q.id];
+  $("backBtn").style.visibility=step===0?"hidden":"visible";
+  $("nextBtn").innerHTML=step===QUESTIONS.length-1?"See my score &rarr;":"Next &rarr;";
+}
+function nextQ(){if(step<QUESTIONS.length-1){step++;renderQ();}else{$("progFill").style.width="100%";show("p-gate");}}
+function prevQ(){if(step>0){step--;renderQ();}}
+
+/* ---------- gate ---------- */
+function submitGate(){
+  const name=$("fname").value.trim(), email=$("femail").value.trim();
+  const ok=name.length>0&&/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  $("gateErr").style.display=ok?"none":"block";
+  if(!ok)return;
+  const d=buildResult(name,email);
+  paint(d);capture(d);show("p-result");
+}
+
+/* ---------- scoring & result (original June 24 logic) ---------- */
+function buildResult(name,email){
+  let pts=0,max=0;
+  QUESTIONS.forEach(Q=>{if(Q.scored){max+=3;pts+=(3-answers[Q.id].idx);}});
+  const pct=Math.round(pts/max*100);
+  let band,cls,verdict,ctaHead,ctaSub;
+  if(pct>=80){
+    band="Healthy";cls="g";
+    verdict="Your books are in solid shape — better than most business owners can say. The goal now is keeping them that way as you grow.";
+    ctaHead="Keep it that way";ctaSub="A quick periodic review catches drift before it becomes a cleanup. Happy to be your second set of eyes.";
+  } else if(pct>=50){
+    band="Warning Signs";cls="y";
+    verdict="Your books are functional but fraying at the edges. Nothing fatal yet — but a few of these issues get expensive if they sit.";
+    ctaHead="Catch it before it compounds";ctaSub="A Financial Health Review pinpoints exactly what\u2019s off and what it takes to fix it. Let\u2019s talk it through.";
+  } else {
+    band="Needs Attention";cls="r";
+    verdict="Your books need real help — and the longer they sit, the harder and costlier the cleanup. The good news: this is fixable, and it\u2019s exactly what I do.";
+    ctaHead="Let\u2019s get your books back on track";ctaSub="This is the situation a cleanup and Financial Health Review is built for. Book a free call and I\u2019ll map out the path.";
+  }
+  const found=[];
+  QUESTIONS.forEach(Q=>{
+    const f=FINDINGS[Q.id];const a=answers[Q.id];
+    if(f&&a&&a.idx>=f.weakAt)found.push(f.text);
+  });
+  const seg=answers.segment?.text;
+  if(seg&&SEGMENT_NOTE[seg])found.push(SEGMENT_NOTE[seg]);
+  return {
+    name,email,score:pct,band,cls,verdict,ctaHead,ctaSub,
+    findings:found.slice(0,4),
+    segment:seg||"",
+    volume:answers.volume?.text||"",
+    answers:Object.fromEntries(Object.entries(answers).map(([k,v])=>[k,v.text]))
+  };
+}
+
+function paint(d){
+  $("band").textContent=d.band;
+  $("band").className="band "+d.cls;
+  $("verdict").textContent=d.verdict;
+  $("ctaHead").textContent=d.ctaHead;
+  $("ctaSub").textContent=d.ctaSub;
+  $("ctaBtn").href=CONFIG.calendlyUrl;
+  $("echoEmail").textContent=d.email;
+  const fc=$("findings");fc.innerHTML="";
+  (d.findings.length?d.findings:["No major red flags surfaced — a periodic review keeps it that way."]).forEach(t=>{
+    const row=document.createElement("div");row.className="finding";
+    row.innerHTML=`<span class="pip"></span><span>${t}</span>`;fc.appendChild(row);
+  });
+  const arc=$("arc"),C=540,off=C-(C*d.score/100);
+  const reduce=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if(reduce){arc.style.strokeDashoffset=off;$("score").textContent=d.score;}
+  else{
+    requestAnimationFrame(()=>{arc.style.transition="stroke-dashoffset 1.1s cubic-bezier(.2,.7,.2,1)";arc.style.strokeDashoffset=off;});
+    let n=0;const t=setInterval(()=>{n+=Math.max(1,Math.round(d.score/28));if(n>=d.score){n=d.score;clearInterval(t);}$("score").textContent=n;},28);
+  }
+}
+
+/* ---------- lead capture: Formspree (free tier, JSON POST) ---------- */
+function capture(d){
+  if(!CONFIG.formspreeUrl||CONFIG.formspreeUrl.indexOf("formspree.io")===-1)return;
+  try{
+    fetch(CONFIG.formspreeUrl,{
+      method:"POST",
+      headers:{"Content-Type":"application/json","Accept":"application/json"},
+      body:JSON.stringify({
+        name:d.name,
+        email:d.email,
+        _subject:`Quiz lead: ${d.name} — score ${d.score} (${d.band})`,
+        score:d.score,
+        band:d.band,
+        business_type:d.segment,
+        monthly_volume:d.volume,
+        answers:d.answers,
+        source:"books-health-check",
+        ts:new Date().toISOString()
+      })
+    }).catch(()=>{});
+  }catch(e){}
+}
+</script>
+</body>
+</html>
